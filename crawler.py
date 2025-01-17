@@ -9,8 +9,9 @@ class BBCCrawler:
         
         self.url = URL
         self.news = []
+        self.links = []
         self.collect_news()
-    
+        
     def get_links(self):
         
         response = requests.get(self.url).content
@@ -18,10 +19,12 @@ class BBCCrawler:
         links = soup.find_all('a', class_='exn3ah91')
         
         first_10 = []
-        for i in range(10):
+        for i in range(1):
             link = links[i].get("href")
             if not 'live' in link:
-                first_10.append(link.replace("/news", ""))
+                link = link.replace("/news", "")
+                first_10.append(link)
+                self.links.append(self.url+link)
         return first_10
 
     def get_news_content(self, url_extension):
@@ -42,4 +45,4 @@ class BBCCrawler:
     @classmethod
     def run(cls):
         instance = cls()
-        return instance.news
+        return (instance.news, instance.links)
